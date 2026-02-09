@@ -538,5 +538,236 @@
         // Initialize
         updateCountdown();
     </script>
+    <!-- MUSIC PLAYER CODE - ADD THIS BEFORE </body> TAG -->
+
+<!-- Music Waves Animation -->
+<div class="music-waves" id="musicWaves">
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+</div>
+
+<!-- Music Toggle Button -->
+<button class="music-toggle" id="musicToggle" onclick="toggleMusic()">
+    🔇
+</button>
+
+<!-- Instructions Box -->
+<div class="music-instructions">
+    Click the button to play music! 🎵
+</div>
+
+<!-- Background Music -->
+<audio id="bgMusic" loop>
+    <source src="supergirl_song.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Music Styles -->
+<style>
+    /* Music Button */
+    .music-toggle {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #b76e79 0%, #d4af37 100%);
+        border: 4px solid white;
+        color: white;
+        font-size: 28px;
+        cursor: pointer;
+        box-shadow: 
+            0 10px 30px rgba(183, 110, 121, 0.5),
+            0 0 20px rgba(212, 175, 55, 0.3);
+        z-index: 10000;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: buttonPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes buttonPulse {
+        0%, 100% {
+            transform: scale(1);
+            box-shadow: 
+                0 10px 30px rgba(183, 110, 121, 0.5),
+                0 0 20px rgba(212, 175, 55, 0.3);
+        }
+        50% {
+            transform: scale(1.1);
+            box-shadow: 
+                0 15px 40px rgba(183, 110, 121, 0.7),
+                0 0 40px rgba(212, 175, 55, 0.5);
+        }
+    }
+
+    .music-toggle:hover {
+        transform: scale(1.15) rotate(10deg);
+        box-shadow: 
+            0 15px 50px rgba(183, 110, 121, 0.8),
+            0 0 50px rgba(212, 175, 55, 0.6);
+    }
+
+    .music-toggle:active {
+        transform: scale(0.95);
+    }
+
+    /* Music Waves */
+    .music-waves {
+        position: fixed;
+        bottom: 35px;
+        right: 35px;
+        width: 60px;
+        height: 60px;
+        pointer-events: none;
+        z-index: 9999;
+    }
+
+    .wave {
+        position: absolute;
+        border: 2px solid #b76e79;
+        border-radius: 50%;
+        opacity: 0;
+    }
+
+    .music-playing .wave {
+        animation: wave-animation 2s ease-out infinite;
+    }
+
+    .wave:nth-child(1) {
+        animation-delay: 0s;
+    }
+
+    .wave:nth-child(2) {
+        animation-delay: 0.5s;
+    }
+
+    .wave:nth-child(3) {
+        animation-delay: 1s;
+    }
+
+    @keyframes wave-animation {
+        0% {
+            width: 60px;
+            height: 60px;
+            opacity: 0.8;
+            top: 0;
+            left: 0;
+        }
+        100% {
+            width: 120px;
+            height: 120px;
+            opacity: 0;
+            top: -30px;
+            left: -30px;
+        }
+    }
+
+    /* Instructions Box */
+    .music-instructions {
+        position: fixed;
+        bottom: 120px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 15px 20px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        max-width: 200px;
+        font-size: 0.9rem;
+        color: #8b4f5c;
+        text-align: center;
+        border: 2px solid #d4af37;
+        z-index: 9998;
+        animation: fadeInUp 1s ease-out 2s both;
+    }
+
+    .music-instructions::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        right: 30px;
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 10px solid #d4af37;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive Mobile */
+    @media (max-width: 768px) {
+        .music-toggle {
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        .music-waves {
+            bottom: 25px;
+            right: 25px;
+        }
+
+        .music-instructions {
+            bottom: 100px;
+            right: 10px;
+            font-size: 0.8rem;
+            max-width: 150px;
+        }
+    }
+</style>
+
+<!-- Music Script -->
+<script>
+    const music = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicToggle');
+    const musicWaves = document.getElementById('musicWaves');
+    let isPlaying = false;
+
+    function toggleMusic() {
+        if (isPlaying) {
+            // Pause music
+            music.pause();
+            musicBtn.textContent = '🔇';
+            musicBtn.style.background = 'linear-gradient(135deg, #b76e79 0%, #d4af37 100%)';
+            musicWaves.classList.remove('music-playing');
+            isPlaying = false;
+        } else {
+            // Play music
+            music.play();
+            musicBtn.textContent = '🔊';
+            musicBtn.style.background = 'linear-gradient(135deg, #ff006e 0%, #8338ec 100%)';
+            musicWaves.classList.add('music-playing');
+            isPlaying = true;
+        }
+    }
+
+    // Optional: Auto-play when page loads (may be blocked by some browsers)
+    window.addEventListener('load', function() {
+        music.play().then(() => {
+            isPlaying = true;
+            musicBtn.textContent = '🔊';
+            musicBtn.style.background = 'linear-gradient(135deg, #ff006e 0%, #8338ec 100%)';
+            musicWaves.classList.add('music-playing');
+        }).catch(() => {
+            // Auto-play blocked by browser
+            musicBtn.textContent = '🔇';
+        });
+    });
+</script>
+<!-- END OF MUSIC PLAYER CODE -->
 </body>
 </html>
